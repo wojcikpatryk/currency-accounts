@@ -1,4 +1,7 @@
 package com.wojcik.patryk.currencyaccounts.core.exception.validation
 
-class AccountRegisterValidationException {
-}
+import com.wojcik.patryk.currencyaccounts.web.rest.dto.account.AccountRegisterDTO
+
+class AccountRegisterValidationException(
+    account: AccountRegisterDTO
+) : Exception("Invalid account: ${account.personalIdNumber}")

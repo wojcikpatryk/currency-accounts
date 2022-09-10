@@ -1,4 +1,5 @@
 package com.wojcik.patryk.currencyaccounts.core.exception.register
 
-class AccountRegistrationException {
-}
+class UniqueAccountRegisterException(
+    personalIdNumber: String
+) : Exception("User $personalIdNumber already exists")

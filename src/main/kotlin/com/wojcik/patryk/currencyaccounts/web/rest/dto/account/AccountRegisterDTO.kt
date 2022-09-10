@@ -1,4 +1,4 @@
-package com.wojcik.patryk.currencyaccounts.web.rest.dto
+package com.wojcik.patryk.currencyaccounts.web.rest.dto.account
 
 import java.math.BigDecimal
 
