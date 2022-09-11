@@ -23,7 +23,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="balance"
-                    type="decimal"
+                    type="double"
                     defaultValueNumeric="0"/>
         </createTable>
     </changeSet>

@@ -1,5 +1,5 @@
 package com.wojcik.patryk.currencyaccounts.domain.account.validation
 
-import com.wojcik.patryk.currencyaccounts.web.rest.dto.account.AccountRegisterDTO
+import com.wojcik.patryk.currencyaccounts.web.rest.dto.account.AccountRegistration
 
-interface AccountValidation : (AccountRegisterDTO) -> Boolean
+interface AccountValidation : (AccountRegistration) -> Boolean

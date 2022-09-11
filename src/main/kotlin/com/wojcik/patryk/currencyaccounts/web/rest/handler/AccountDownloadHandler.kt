@@ -4,6 +4,7 @@ import com.wojcik.patryk.currencyaccounts.domain.account.service.AccountDownload
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.server.ServerRequest
 import org.springframework.web.reactive.function.server.ServerResponse
+import reactor.kotlin.core.publisher.switchIfEmpty
 
 @Component
 class AccountDownloadHandler(
@@ -12,7 +13,8 @@ class AccountDownloadHandler(
 
     fun getAccount(request: ServerRequest) =
         request
-            .pathVariable("personalIdNumber")
+            .pathVariable("personalId")
             .let(downloadService::getAccount)
             .flatMap(ServerResponse.ok()::bodyValue)
+            .switchIfEmpty(ServerResponse.notFound()::build)
 }

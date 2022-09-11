@@ -2,7 +2,7 @@ package com.wojcik.patryk.currencyaccounts.domain.account.validation
 
 import com.wojcik.patryk.currencyaccounts.core.exception.validation.AccountRegisterValidationException
 import com.wojcik.patryk.currencyaccounts.core.util.flatMapIfTrue
-import com.wojcik.patryk.currencyaccounts.web.rest.dto.account.AccountRegisterDTO
+import com.wojcik.patryk.currencyaccounts.web.rest.dto.account.AccountRegistration
 import org.springframework.stereotype.Component
 import reactor.core.publisher.Mono
 import reactor.kotlin.core.publisher.switchIfEmpty
@@ -14,7 +14,7 @@ class AccountValidator(
     private val validations: List<AccountValidation>
 ) {
 
-    fun validate(account: AccountRegisterDTO) =
+    fun validate(account: AccountRegistration) =
         validations
             .toFlux()
             .all { check -> check(account) }

@@ -2,9 +2,9 @@ package com.wojcik.patryk.currencyaccounts.web.rest.dto.account
 
 import java.math.BigDecimal
 
-data class AccountRegisterDTO(
+data class AccountRegistration(
     val firstName: String,
     val lastName: String,
-    val personalIdNumber: String,
-    val startingBalanceInPLN: BigDecimal
+    val startingBalanceInPLN: BigDecimal,
+    val personalId: String
 )

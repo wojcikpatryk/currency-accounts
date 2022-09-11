@@ -8,5 +8,5 @@ import reactor.core.publisher.Mono
 @Repository
 interface AccountRepository : R2dbcRepository<Account, Long> {
 
-    fun findByPersonalIdNumber(personalIdNumber: String): Mono<Account>
+    fun findByPersonalId(personalId: String): Mono<Account>
 }

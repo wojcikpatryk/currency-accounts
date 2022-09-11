@@ -1,3 +1,3 @@
 package com.wojcik.patryk.currencyaccounts.web.rest.dto.error
 
-data class ErrorDTO(val message: String?)
+data class ErrorMessage(val message: String?)

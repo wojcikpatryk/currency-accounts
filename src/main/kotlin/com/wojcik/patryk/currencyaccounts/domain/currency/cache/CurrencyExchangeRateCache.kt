@@ -12,9 +12,7 @@ class CurrencyExchangeRateCache {
     private val cache = ConcurrentHashMap<CurrencyExchangeRateCacheKey, CurrencyExchangeRate>()
 
     fun put(exchangeRate: CurrencyExchangeRate): CurrencyExchangeRate =
-        cache.getOrPut(CurrencyExchangeRateCacheKey(exchangeRate.date, exchangeRate.code)) {
-            exchangeRate
-        }
+        cache.getOrPut(CurrencyExchangeRateCacheKey(exchangeRate.date, exchangeRate.code)) { exchangeRate }
 
     fun findNewest(currency: AccountCurrency) =
         find { this.currency == currency }

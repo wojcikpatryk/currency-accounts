@@ -1,6 +1,7 @@
 package com.wojcik.patryk.currencyaccounts.web.rest
 
 import com.wojcik.patryk.currencyaccounts.web.rest.handler.AccountDownloadHandler
+import com.wojcik.patryk.currencyaccounts.web.rest.handler.AccountExchangeHandler
 import com.wojcik.patryk.currencyaccounts.web.rest.handler.AccountRegisterHandler
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,9 +17,11 @@ class AccountRouting {
     @Bean
     fun route(
         registerHandler: AccountRegisterHandler,
-        accountHandler: AccountDownloadHandler
+        accountHandler: AccountDownloadHandler,
+        exchangeHandler: AccountExchangeHandler
     ) = router {
         POST("$URL/register", registerHandler::register)
-        GET("$URL/{personalIdNumber}", accountHandler::getAccount)
+        GET("$URL/{personalId}", accountHandler::getAccount)
+        PATCH("$URL/exchange", exchangeHandler::exchange)
     }
 }

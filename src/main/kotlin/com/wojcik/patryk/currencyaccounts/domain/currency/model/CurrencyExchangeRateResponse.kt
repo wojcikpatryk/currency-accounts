@@ -1,8 +1,8 @@
 package com.wojcik.patryk.currencyaccounts.domain.currency.model
 
-import com.wojcik.patryk.currencyaccounts.core.enums.AccountCurrency
+import java.time.LocalDate
 
 data class CurrencyExchangeRateResponse(
-    val code: AccountCurrency,
+    val effectiveDate: LocalDate,
     val rates: List<CurrencyRateResponse>
 )

@@ -16,7 +16,7 @@
             </column>
             <column name="first_name" type="varchar(255)"/>
             <column name="last_name" type="varchar(255)"/>
-            <column name="personal_id_number"
+            <column name="personal_id"
                     type="varchar(255)">
                 <constraints unique="true"/>
             </column>

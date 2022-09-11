@@ -2,12 +2,13 @@ package com.wojcik.patryk.currencyaccounts.domain.account.service.dao
 
 import com.wojcik.patryk.currencyaccounts.core.enums.AccountCurrency
 import com.wojcik.patryk.currencyaccounts.core.exception.register.UniqueAccountRegisterException
+import com.wojcik.patryk.currencyaccounts.core.util.DEFAULT_ACCOUNT_CURRENCY
 import com.wojcik.patryk.currencyaccounts.domain.account.model.Account
 import com.wojcik.patryk.currencyaccounts.domain.account.model.SavedAccount
 import com.wojcik.patryk.currencyaccounts.domain.account.repository.AccountRepository
 import com.wojcik.patryk.currencyaccounts.domain.subaccount.model.SubAccount
 import com.wojcik.patryk.currencyaccounts.domain.subaccount.repository.SubAccountRepository
-import com.wojcik.patryk.currencyaccounts.web.rest.dto.account.AccountRegisterDTO
+import com.wojcik.patryk.currencyaccounts.web.rest.dto.account.AccountRegistration
 import org.slf4j.LoggerFactory
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
@@ -24,17 +25,17 @@ class AccountDaoService(
         private val log = LoggerFactory.getLogger(this::class.java)
     }
 
-    fun save(account: AccountRegisterDTO) =
+    fun save(account: AccountRegistration) =
         accountRepository
             .save(Account.of(account))
-            .onErrorMap(DataIntegrityViolationException::class.java) { UniqueAccountRegisterException(account.personalIdNumber) }
-            .doOnSuccess { log.info("Account saved: ${it.personalIdNumber}") }
+            .onErrorMap(DataIntegrityViolationException::class.java) { UniqueAccountRegisterException(account.personalId) }
+            .doOnSuccess { log.info("Account saved: ${it.personalId}") }
             .doOnError { log.error("Account not saved: ${it.message}", it) }
             .flatMap { createAccount(it, account.startingBalanceInPLN) }
 
-    fun findByPersonalIdNumber(personalIdNumber: String) =
+    fun findByPersonalId(personalId: String) =
         accountRepository
-            .findByPersonalIdNumber(personalIdNumber)
+            .findByPersonalId(personalId)
             .flatMap(::getSubAccounts)
 
     private fun createAccount(
@@ -48,10 +49,11 @@ class AccountDaoService(
     private fun subAccounts(
         account: Account,
         startingBalanceInPLN: BigDecimal
-    ) = setOf(
-        SubAccount(accountId = account.id, currency = AccountCurrency.PLN, balance = startingBalanceInPLN),
-        SubAccount(accountId = account.id, currency = AccountCurrency.USD, balance = BigDecimal.ZERO)
-    )
+    ) = AccountCurrency
+        .values()
+        .filter { it != DEFAULT_ACCOUNT_CURRENCY }
+        .map { SubAccount(accountId = account.id, currency = it, balance = BigDecimal.ZERO) }
+        .plus(SubAccount(accountId = account.id, currency = DEFAULT_ACCOUNT_CURRENCY, balance = startingBalanceInPLN))
 
     private fun getSubAccounts(account: Account) =
         account

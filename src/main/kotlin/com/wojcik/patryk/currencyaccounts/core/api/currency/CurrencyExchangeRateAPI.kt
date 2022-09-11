@@ -6,6 +6,7 @@ import com.wojcik.patryk.currencyaccounts.domain.currency.model.CurrencyExchange
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
+import reactor.kotlin.core.publisher.toFlux
 
 @Component
 class CurrencyExchangeRateAPI(
@@ -14,21 +15,22 @@ class CurrencyExchangeRateAPI(
 
     companion object {
         private const val TABLE = "A"
-        private const val EXCHANGE_RATES_URL = "/exchangerates/rates/$TABLE"
+        private const val EXCHANGE_RATES_URL = "/exchangerates/tables/$TABLE"
     }
 
-    fun getCurrencyExchangeRate(currency: AccountCurrency) =
+    fun getCurrencyExchangeRates(currency: AccountCurrency) =
         client
             .get()
-            .uri("${EXCHANGE_RATES_URL}/$currency")
+            .uri(EXCHANGE_RATES_URL)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .bodyToMono(CurrencyExchangeRateResponse::class.java)
-            .map(::toCurrencyExchangeRate)
+            .bodyToFlux(CurrencyExchangeRateResponse::class.java)
+            .flatMap(::toCurrencyExchangeRate)
 
     private fun toCurrencyExchangeRate(response: CurrencyExchangeRateResponse) =
         response
             .rates
-            .minByOrNull { it.effectiveDate }!!
-            .let { CurrencyExchangeRate(response.code, it.effectiveDate, it.mid) }
+            .toFlux()
+            .filter { AccountCurrency.exists(it.code) }
+            .map { CurrencyExchangeRate(AccountCurrency.valueOf(it.code), response.effectiveDate, it.mid) }
 }
